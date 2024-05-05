@@ -127,32 +127,7 @@ public class BmsServiceImpl implements BmsService {
     }
 
     @Override
-    public ApiResponseDto getListOfBooks(int pageSize, int pageNumber) {
-
-        //initialize pagination request in descending order by id
-        Pageable pageable = PageRequest.of(pageNumber-1, pageSize, Sort.by("id").descending());
-
-        //fetch records
-        Page<Book> bookPage = bookRepository.findAll(pageable);
-
-        //extract data to dto
-        List<BookDto> books = toBookDtoList(bookPage.getContent());
-
-        BookList bookList = new BookList();
-        bookList.setBooks(books);
-        bookList.setPageNumber(pageNumber);
-        bookList.setPageSize(pageSize);
-        bookList.setTotalPages(bookPage.getTotalPages());
-        bookList.setTotalCount(bookPage.getTotalElements());
-
-        return ApiResponseDto.builder()
-                .code(200)
-                .data(bookList)
-                .build();
-    }
-
-    @Override
-    public ApiResponseDto getListOfBooksWithFilter(String title, String author, int pageSize, int pageNumber) {
+    public ApiResponseDto getListOfBooks(String title, String author, int pageSize, int pageNumber) {
 
         //initialize pagination request in descending order by id
         Pageable pageable = PageRequest.of(pageNumber-1, pageSize, Sort.by("id").descending());

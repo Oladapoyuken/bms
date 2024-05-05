@@ -219,218 +219,6 @@ class BmsServiceTest {
         );
     }
 
-    @Test
-    void getListOfBooksWithData() {
-        Pageable pageable = PageRequest.of(0, 10, Sort.by("id").descending());
-        Page page = new Page() {
-            @Override
-            public int getTotalPages() {
-                return 1;
-            }
-
-            @Override
-            public long getTotalElements() {
-                return 1;
-            }
-
-            @Override
-            public Page map(Function converter) {
-                return null;
-            }
-
-            @Override
-            public int getNumber() {
-                return 0;
-            }
-
-            @Override
-            public int getSize() {
-                return 0;
-            }
-
-            @Override
-            public int getNumberOfElements() {
-                return 1;
-            }
-
-            @Override
-            public List getContent() {
-                return List.of(book);
-            }
-
-            @Override
-            public boolean hasContent() {
-                return false;
-            }
-
-            @Override
-            public Sort getSort() {
-                return null;
-            }
-
-            @Override
-            public boolean isFirst() {
-                return false;
-            }
-
-            @Override
-            public boolean isLast() {
-                return false;
-            }
-
-            @Override
-            public boolean hasNext() {
-                return false;
-            }
-
-            @Override
-            public boolean hasPrevious() {
-                return false;
-            }
-
-            @Override
-            public Pageable nextPageable() {
-                return null;
-            }
-
-            @Override
-            public Pageable previousPageable() {
-                return null;
-            }
-
-            @Override
-            public Iterator iterator() {
-                return null;
-            }
-        };
-        BookDto dto1 = BookDto.builder()
-                .id(1L)
-                .price(BigDecimal.TEN)
-                .title("First Stage")
-                .publicationYear(2023)
-                .author("Yusuf")
-                .description("Coding Assessment")
-                .pages(10)
-                .publisher("Coderbyte")
-                .isbn("ABC-123")
-                .build();
-
-        BookList bookList = new BookList();
-        bookList.setBooks(List.of(dto1));
-        bookList.setPageNumber(1);
-        bookList.setPageSize(10);
-        bookList.setTotalPages(1);
-        bookList.setTotalCount(1);
-        ApiResponseDto expectedResponse = ApiResponseDto.builder()
-                .code(200)
-                .data(bookList)
-                .build();
-        Mockito.when(bookRepository.findAll(pageable)).thenReturn(page);
-        ApiResponseDto actualResponse = bmsService.getListOfBooks(10, 1);
-        assertEquals(expectedResponse, actualResponse);
-    }
-
-    @Test
-    void getListOfBooksWithEmptyData() {
-        int pageNumber = 1;
-        int pageSize = 10;
-        Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by("id").descending());
-        Page page = new Page() {
-            @Override
-            public int getTotalPages() {
-                return 0;
-            }
-
-            @Override
-            public long getTotalElements() {
-                return 0;
-            }
-
-            @Override
-            public Page map(Function converter) {
-                return null;
-            }
-
-            @Override
-            public int getNumber() {
-                return 0;
-            }
-
-            @Override
-            public int getSize() {
-                return 0;
-            }
-
-            @Override
-            public int getNumberOfElements() {
-                return 0;
-            }
-
-            @Override
-            public List getContent() {
-                return Collections.emptyList();
-            }
-
-            @Override
-            public boolean hasContent() {
-                return false;
-            }
-
-            @Override
-            public Sort getSort() {
-                return null;
-            }
-
-            @Override
-            public boolean isFirst() {
-                return false;
-            }
-
-            @Override
-            public boolean isLast() {
-                return false;
-            }
-
-            @Override
-            public boolean hasNext() {
-                return false;
-            }
-
-            @Override
-            public boolean hasPrevious() {
-                return false;
-            }
-
-            @Override
-            public Pageable nextPageable() {
-                return null;
-            }
-
-            @Override
-            public Pageable previousPageable() {
-                return null;
-            }
-
-            @Override
-            public Iterator iterator() {
-                return null;
-            }
-        };
-
-        BookList bookList = new BookList();
-        bookList.setBooks(List.of());
-        bookList.setPageNumber(1);
-        bookList.setPageSize(10);
-        bookList.setTotalPages(0);
-        bookList.setTotalCount(0);
-        ApiResponseDto expectedResponse = ApiResponseDto.builder()
-                .code(200)
-                .data(bookList)
-                .build();
-        Mockito.when(bookRepository.findAll(pageable)).thenReturn(page);
-        ApiResponseDto actualResponse = bmsService.getListOfBooks(pageSize, pageNumber);
-        assertEquals(expectedResponse, actualResponse);
-    }
 
     @Test
     void getListOfBooksWithFilterParameter() {
@@ -540,12 +328,12 @@ class BmsServiceTest {
                 .data(bookList)
                 .build();
         Mockito.when(bookRepository.findAll((Specification<Book>) any(), (Pageable) any())).thenReturn(page);
-        ApiResponseDto actualResponse = bmsService.getListOfBooksWithFilter("stage", "", pageSize, pageNumber);
+        ApiResponseDto actualResponse = bmsService.getListOfBooks("stage", "", pageSize, pageNumber);
         assertEquals(expectedResponse, actualResponse);
     }
 
     @Test
-    void getListOfBooksWithNonExistingFilterParamter() {
+    void getListOfBooksWithoutFilterParamter() {
         int pageNumber = 1;
         int pageSize = 10;
         Page page = new Page() {
@@ -643,7 +431,7 @@ class BmsServiceTest {
                 .data(bookList)
                 .build();
         Mockito.when(bookRepository.findAll((Specification<Book>) any(), (Pageable) any())).thenReturn(page);
-        ApiResponseDto actualResponse = bmsService.getListOfBooksWithFilter("mobilise", "", 10, 1);
+        ApiResponseDto actualResponse = bmsService.getListOfBooks("mobilise", "", 10, 1);
         assertEquals(expectedResponse, actualResponse);
     }
 

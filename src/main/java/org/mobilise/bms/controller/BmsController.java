@@ -31,16 +31,6 @@ public class BmsController {
         return getResponse(response);
     }
 
-    //fetch all books using pagination
-    @GetMapping
-    public ResponseEntity<?> fetchAllBooks(
-            @RequestParam(name = "pageNumber", defaultValue = "1") int pageNumber,
-            @RequestParam(name = "pageSize", defaultValue = "10") int  pageSize
-    ){
-        ApiResponseDto response = bmsService.getListOfBooks(pageSize, pageNumber);
-        return getResponse(response);
-    }
-
     //fetch book details using the book id
     @GetMapping("/{id}")
     public ResponseEntity<?> getBookById(@PathVariable("id") Long id){
@@ -74,7 +64,7 @@ public class BmsController {
             @RequestParam(name = "pageNumber", defaultValue = "1") int pageNumber,
             @RequestParam(name = "pageSize", defaultValue = "10") int pageSize
     ) {
-        ApiResponseDto response = bmsService.getListOfBooksWithFilter(title, author, pageSize, pageNumber);
+        ApiResponseDto response = bmsService.getListOfBooks(title, author, pageSize, pageNumber);
         return getResponse(response);
     }
 

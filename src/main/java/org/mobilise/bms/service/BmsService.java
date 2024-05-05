@@ -18,6 +18,5 @@ public interface BmsService {
     ApiResponseDto updateBook(UpdateBookDto bookDto, Long id);
     ApiResponseDto deleteBook(Long id);
     ApiResponseDto getBook(Long id);
-    ApiResponseDto getListOfBooks(int pageSize, int pageNumber);
-    ApiResponseDto getListOfBooksWithFilter(String title, String author, int pageSize, int pageNumber);
+    ApiResponseDto getListOfBooks(String title, String author, int pageSize, int pageNumber);
 }
