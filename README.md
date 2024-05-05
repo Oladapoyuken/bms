@@ -23,3 +23,10 @@ A simple book management system built using Java, Spring Boot and a H2 in-memory
 - Run Application
 - View application swagger documentation on your web browser with the following url: http://localhost:9090/bms/api/v1/swagger-ui/index.html
 - Use the provided endpoints to perform all the required CRUD operations
+
+## Step To Run Service Layer Unit Tests
+
+- Navigate to project test directory
+- Go to the BmsServiceTest.class
+- Run test class.
+

@@ -1,10 +1,12 @@
 package org.mobilise.bms.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.mobilise.bms.dto.ApiResponseDto;
 import org.mobilise.bms.dto.BookDto;
+import org.mobilise.bms.dto.BookList;
 import org.mobilise.bms.dto.UpdateBookDto;
 import org.mobilise.bms.service.BmsService;
 import org.springframework.http.ResponseEntity;
@@ -23,53 +25,48 @@ public class BmsController {
 
     private final BmsService bmsService;
 
-    //create new book
+    @Operation(summary = "Create new Book")
     @PostMapping
-    public ResponseEntity<?> createBook(@RequestBody @Valid BookDto bookDto) {
+    public ResponseEntity<ApiResponseDto<BookDto>> createBook(@RequestBody @Valid BookDto bookDto) {
         log.info("createBook: {}", bookDto);
-        ApiResponseDto response = bmsService.createBook(bookDto);
-        return getResponse(response);
+        ApiResponseDto<BookDto> response = bmsService.createBook(bookDto);
+        return ResponseEntity.status(response.getCode()).body(response);
     }
 
-    //fetch book details using the book id
+    @Operation(summary = "Fetch book details using the book id")
     @GetMapping("/{id}")
-    public ResponseEntity<?> getBookById(@PathVariable("id") Long id){
-        ApiResponseDto response = bmsService.getBook(id);
-        return getResponse(response);
+    public ResponseEntity<ApiResponseDto<BookDto>> getBookById(@PathVariable("id") Long id){
+        ApiResponseDto<BookDto> response = bmsService.getBook(id);
+        return ResponseEntity.status(response.getCode()).body(response);
     }
 
-    //delete book using the book id
+    @Operation(summary = "Delete book using the book id")
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> romoveBookById(@PathVariable("id") Long id){
+    public ResponseEntity<ApiResponseDto> romoveBookById(@PathVariable("id") Long id){
         ApiResponseDto response = bmsService.deleteBook(id);
-        return getResponse(response);
+        return ResponseEntity.status(response.getCode()).body(response);
     }
 
-    //update book by passing the book id as a path variable and updated details in the request body
+    @Operation(summary = "Update book details")
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateBook(
+    public ResponseEntity<ApiResponseDto<BookDto>> updateBook(
             @RequestBody @Valid UpdateBookDto bookDto,
             @PathVariable("id") Long id
     ) {
         log.info("updateBook: {}", bookDto);
-        ApiResponseDto response = bmsService.updateBook(bookDto, id);
-        return getResponse(response);
+        ApiResponseDto<BookDto> response = bmsService.updateBook(bookDto, id);
+        return ResponseEntity.status(response.getCode()).body(response);
     }
 
-    //filter books using any key word in book title or author
-    @GetMapping("/search")
-    public ResponseEntity<?> searchBook(
+    @Operation(summary = "Fetch all books")
+    @GetMapping
+    public ResponseEntity<ApiResponseDto<BookList>> fetchBooks(
             @RequestParam(name = "title", required = false) String title,
             @RequestParam(name = "author", required = false) String author,
             @RequestParam(name = "pageNumber", defaultValue = "1") int pageNumber,
             @RequestParam(name = "pageSize", defaultValue = "10") int pageSize
     ) {
-        ApiResponseDto response = bmsService.getListOfBooks(title, author, pageSize, pageNumber);
-        return getResponse(response);
-    }
-
-    //map response with the right http status code
-    private ResponseEntity<ApiResponseDto> getResponse(ApiResponseDto apiResponseDto) {
-        return ResponseEntity.status(apiResponseDto.getCode()).body(apiResponseDto);
+        ApiResponseDto<BookList> response = bmsService.getListOfBooks(title, author, pageSize, pageNumber);
+        return ResponseEntity.status(response.getCode()).body(response);
     }
 }

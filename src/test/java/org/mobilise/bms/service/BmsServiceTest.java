@@ -152,19 +152,6 @@ class BmsServiceTest {
 
     @Test
     void updateBooThatDoesNoExist() {
-        Mockito.when(bookRepository.findById(1L)).thenReturn(Optional.of(book));
-        BookDto dto1 = BookDto.builder()
-                .id(1L)
-                .price(BigDecimal.TWO)
-                .title("Second Stage")
-                .publicationYear(2024)
-                .author("CTO")
-                .description("Meet the team")
-                .pages(20)
-                .publisher("Mobilise")
-                .isbn("ABC-123")
-                .build();
-
         Mockito.when(bookRepository.findById(1L)).thenReturn(Optional.empty());
         ApiResponseDto actualResponse = bmsService.updateBook(updateBookDto, 1L);
         assertEquals(ApiResponseDto.builder()
@@ -198,18 +185,6 @@ class BmsServiceTest {
 
     @Test
     void getBookWithWrongId() {
-        Mockito.when(bookRepository.findById(1L)).thenReturn(Optional.of(book));
-        BookDto dto1 = BookDto.builder()
-                .id(1L)
-                .price(BigDecimal.TEN)
-                .title("First Stage")
-                .publicationYear(2023)
-                .author("Yusuf")
-                .description("Coding Assessment")
-                .pages(10)
-                .publisher("Coderbyte")
-                .isbn("ABC-123")
-                .build();
         Mockito.when(bookRepository.findById(1L)).thenReturn(Optional.empty());
         ApiResponseDto actualResponse = bmsService.getBook(1L);
         assertEquals(ApiResponseDto.builder()
@@ -431,18 +406,20 @@ class BmsServiceTest {
                 .data(bookList)
                 .build();
         Mockito.when(bookRepository.findAll((Specification<Book>) any(), (Pageable) any())).thenReturn(page);
-        ApiResponseDto actualResponse = bmsService.getListOfBooks("mobilise", "", 10, 1);
+        ApiResponseDto actualResponse = bmsService.getListOfBooks("mobilise", "", pageSize, pageNumber);
         assertEquals(expectedResponse, actualResponse);
     }
 
     @Test
     void deleteExistingBook() {
         Mockito.when(bookRepository.findById(1L)).thenReturn(Optional.of(book));
+
         ApiResponseDto actualResponse = bmsService.deleteBook(1L);
         assertEquals(ApiResponseDto.builder()
                 .code(200)
                 .message("Book deleted successfully").build(), actualResponse
         );
+        verify(bookRepository, times(1)).deleteById(1L);
     }
 
     @Test

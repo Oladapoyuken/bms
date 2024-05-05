@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.mobilise.bms.dto.ApiResponseDto;
 import org.mobilise.bms.dto.BookDto;
+import org.mobilise.bms.dto.BookList;
 import org.mobilise.bms.dto.UpdateBookDto;
 import org.springframework.stereotype.Service;
 
@@ -14,9 +15,9 @@ import org.springframework.stereotype.Service;
 
 
 public interface BmsService {
-    ApiResponseDto createBook(BookDto bookDto);
-    ApiResponseDto updateBook(UpdateBookDto bookDto, Long id);
+    ApiResponseDto<BookDto> createBook(BookDto bookDto);
+    ApiResponseDto<BookDto> updateBook(UpdateBookDto bookDto, Long id);
     ApiResponseDto deleteBook(Long id);
-    ApiResponseDto getBook(Long id);
-    ApiResponseDto getListOfBooks(String title, String author, int pageSize, int pageNumber);
+    ApiResponseDto<BookDto> getBook(Long id);
+    ApiResponseDto<BookList> getListOfBooks(String title, String author, int pageSize, int pageNumber);
 }
